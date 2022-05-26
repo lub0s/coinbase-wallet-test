@@ -1,3 +1,28 @@
+require('node-libs-expo/globals');
+
+import * as Random from 'expo-random';
+
+import { NativeModules } from 'react-native'
+const { RNRandomBytes } = NativeModules
+
+if (!global.crypto) global.crypto = {}
+  if (!global.crypto.getRandomValues) {
+
+    window.crypto.getRandomValues = async function getRandomValues (arr) {
+      let orig = arr
+      if (arr.byteLength != arr.length) {
+        arr = new Uint8Array(arr.buffer)
+      }
+      const bytes = RNRandomBytes.randomBytes(arr.length)
+      console.log(bytes);
+      
+      for (var i = 0; i < bytes.length; i++) {
+        arr[i] = bytes[i]
+      }
+ 
+      return orig
+    }
+  }
 
 
 import 'react-native-url-polyfill/auto';
